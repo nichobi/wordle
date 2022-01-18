@@ -11,8 +11,8 @@ author:              Nicholas Boyd Isacsson
 maintainer:          nicholas@isacsson.se
 category: Game
 build-type:          Simple
+data-files:          data/*.txt
 -- extra-source-files:  CHANGELOG.md
-data-dir: data
 
 executable wordle
   hs-source-dirs:      src

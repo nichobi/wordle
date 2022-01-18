@@ -5,7 +5,7 @@ chunksOf n [] = []
 chunksOf n xs = h : chunksOf n t
   where (h, t) = splitAt n xs
 
-withKey :: eq a => [(a, b)] -> a -> [b]
+withKey :: Eq a => [(a, b)] -> a -> [b]
 withKey ((a,b):xs) y
   | a == y    = b : withKey xs y
   | otherwise = withKey xs y

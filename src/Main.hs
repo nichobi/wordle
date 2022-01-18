@@ -69,13 +69,13 @@ getDayNumber = do
 
 readWordle :: Int -> IO String
 readWordle dayNumber = do
-  file <- getDataFileName "wordlesraw"
+  file <- getDataFileName "data/wordlesraw.txt"
   take wordLength . drop (dayNumber * wordLength) <$> readFile file
 
 getDictionary :: IO [String]
 getDictionary = do
-  dictFile      <- getDataFileName "dictionaryraw"
-  wordlesFile   <- getDataFileName "wordlesraw"
+  dictFile      <- getDataFileName "data/dictionaryraw.txt"
+  wordlesFile   <- getDataFileName "data/wordlesraw.txt"
   rawDictionary <- init <$> readFile dictFile
   wordles       <- init <$> readFile wordlesFile
   pure $ chunksOf wordLength (wordles ++ rawDictionary)
