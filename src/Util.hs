@@ -1,5 +1,28 @@
 module Util where
 
+-- Constants
+
+wordLength = 5 :: Int
+numGuess   = 6 :: Int
+
+-- Datatypes
+
+data Result = Unknown | Excluded | Misplaced | Correct
+  deriving (Show, Eq, Ord)
+data Status = InProgress | Won | Lost
+
+data AppState = AppState
+  { word       :: String
+  , status     :: Status
+  , guesses    :: [String]
+  , entry      :: String
+  , day        :: Int
+  , dictionary :: [String]
+  , debug      :: Bool
+  }
+
+-- Functions
+
 chunksOf :: Int -> [a] -> [[a]]
 chunksOf n [] = []
 chunksOf n xs = h : chunksOf n t
