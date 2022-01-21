@@ -10,6 +10,7 @@ numGuess   = 6 :: Int
 data Result = Unknown | Excluded | Misplaced | Correct
   deriving (Show, Eq, Ord)
 data Status = InProgress | Won | Lost
+  deriving (Show, Eq, Ord)
 
 data AppState = AppState
   { word       :: String

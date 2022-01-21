@@ -3,6 +3,7 @@ module Main where
 import Util
 import Paths_wordle
 import Draw (drawUI, myAttrMap)
+import Export (export)
 
 import Data.Char  (isLower)
 import Data.Time  (diffDays, fromGregorian, getZonedTime, localDay, zonedTimeToLocalTime)
@@ -14,6 +15,7 @@ import Brick
   , defaultMain, showFirstCursor
   , continue, halt, continueWithoutRedraw
   )
+import Control.Monad (when)
 
 initState word dictionary day = AppState
   { word       = word
@@ -29,7 +31,8 @@ main = do
   dayNumber  <- getDayNumber
   word       <- readWordle dayNumber
   dictionary <- getDictionary
-  defaultMain app (initState word dictionary dayNumber)
+  finalState <- defaultMain app (initState word dictionary dayNumber)
+  when (status finalState `elem` [Won, Lost]) (putStrLn $ export finalState)
 
 getDayNumber :: IO Int
 getDayNumber = do
@@ -76,7 +79,7 @@ makeGuess as@AppState{entry=entry, word=word, guesses=guesses, dictionary = dict
   | length entry == wordLength && entry `elem` dict
      = as{ entry   = []
          , guesses = entry:guesses
-         , status  = if length guesses == numGuess then Lost else InProgress
+         , status  = if length (entry:guesses) == numGuess then Lost else InProgress
          }
   | otherwise     = as
 

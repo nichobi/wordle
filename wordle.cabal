@@ -1,24 +1,25 @@
-cabal-version:       >=1.10
+cabal-version:         >=1.10
 
-name:                wordle
-version:             0.1.0.0
-synopsis: A Wordle clone for the terminal
+name:                  wordle
+version:               0.1.1.0
+synopsis:              A Wordle clone for the terminal
 description:
   A clone of <https://www.powerlanguage.co.uk/ powerlanguage>'s daily word game <https://www.powerlanguage.co.uk/wordle/ Wordle>, for the terminal.
-license: GPL-3
-license-file:        LICENSE
-author:              Nicholas Boyd Isacsson
-maintainer:          nicholas@isacsson.se
-category:            Game
-build-type:          Simple
-data-files:          data/*.txt
+license:               GPL-3
+license-file:          LICENSE
+author:                Nicholas Boyd Isacsson
+maintainer:            nicholas@isacsson.se
+category:              Game
+build-type:            Simple
+data-files:            data/*.txt
 
 executable wordle
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Paths_wordle
+  other-modules:       Draw
+                     , Export
+                     , Paths_wordle
                      , Util
-                     , Draw
                      , WordleComp
   ghc-options:         -threaded
   build-depends:       base >=4.15 && <4.16
