@@ -24,6 +24,7 @@ initState word dictionary day = AppState
   , entry      = []
   , day        = day
   , dictionary = dictionary
+  , message    = ""
   , debug      = False
   }
 
@@ -63,25 +64,25 @@ app = App { appDraw         = drawUI
 
 handleEvent :: AppState -> BrickEvent () e -> EventM () (Next AppState)
 handleEvent as@AppState{status = InProgress} e = case e of
-  (VtyEvent (EvKey (KChar c) []))         -> (continue . insertChar c) as
-  (VtyEvent (EvKey KBS       []))         -> (continue . removeChar)   as
-  (VtyEvent (EvKey KEnter    []))         -> (continue . makeGuess)    as
---(VtyEvent (EvKey KEsc      []))         -> (continue . toggleDebug)  as
-  (VtyEvent (EvKey (KChar c)  [V.MCtrl])) -> halt                      as
-  _                                       -> continueWithoutRedraw     as
+  (VtyEvent (EvKey (KChar c) []))        -> (continue . insertChar c) as'
+  (VtyEvent (EvKey KBS       []))        -> (continue . removeChar)   as'
+  (VtyEvent (EvKey KEnter    []))        -> (continue . makeGuess)    as'
+--(VtyEvent (EvKey KEsc      []))        -> (continue . toggleDebug)  as'
+  (VtyEvent (EvKey (KChar c) [V.MCtrl])) -> halt                      as
+  _                                      -> continueWithoutRedraw     as
+  where as' = as{message = ""}
 handleEvent as e = case e of
-  (VtyEvent (EvKey (KChar c)  [V.MCtrl])) -> halt                      as
-  _                                       -> continueWithoutRedraw     as
+  (VtyEvent (EvKey (KChar c) [V.MCtrl])) -> halt                      as
+  _                                      -> continueWithoutRedraw     as
 
 makeGuess :: AppState -> AppState
 makeGuess as@AppState{entry=entry, word=word, guesses=guesses, dictionary = dict}
-  | word == entry = as{entry = [], guesses = entry : guesses, status = Won}
-  | length entry == wordLength && entry `elem` dict
-     = as{ entry   = []
-         , guesses = entry:guesses
-         , status  = if length (entry:guesses) == numGuess then Lost else InProgress
-         }
-  | otherwise     = as
+  | word == entry                 = as{entry = [], guesses = entry:guesses, status = Won}
+  | length entry < wordLength     = as{message = "Not enough letters"}
+  | entry `notElem` dict          = as{message = "Not in word list"}
+  | length guesses + 1 < numGuess = as{entry = [], guesses = entry:guesses}
+  | otherwise
+    = as{entry = [], guesses = entry:guesses, status = Lost, message = "Answer: " ++ word}
 
 insertChar :: Char -> AppState -> AppState
 insertChar c as@AppState{entry = entry}

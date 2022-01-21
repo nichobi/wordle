@@ -10,7 +10,7 @@ import Brick
   , defaultMain, showFirstCursor, continueWithoutRedraw
   , continue, halt
   , str, vBox, hBox
-  , padRight, padLeft, padTop, padAll, Padding (Max)
+  , padRight, padLeft, padTop, padAll, Padding (Max, Pad)
   , attrMap, withAttr, AttrName, attrName, bg
   )
 import qualified Brick.Widgets.Border       as B
@@ -32,8 +32,11 @@ myAttrMap = attrMap V.defAttr
 drawUI :: AppState -> [Widget ()]
 drawUI as = pure $ vBox
   [ drawTitle as
-  , drawWordle as
-  , drawKeyboard as
+  , C.center $ hBox
+    [ drawWordle as
+    , padTop (Pad 2) $ padLeft (Pad 4) $ drawKeyboard as
+    ]
+  , drawMessage as
   , drawDebug as
   ]
 
@@ -41,7 +44,7 @@ drawTitle AppState{day = day} = C.hCenter $ str $ "Wordle " ++ show day
 
 drawWordle :: AppState -> Widget ()
 drawWordle as@AppState{guesses = guesses, word = word}
-  = C.center $ W.withBorderStyle BS.unicodeRounded $ B.border
+  = W.withBorderStyle BS.unicodeRounded $ B.border
     $ W.setAvailableSize (wordLength, numGuess) $ W.padBottom Max
     $ vBox $ reverse $ drawEntry as:map (drawGuess word) guesses
 
@@ -49,19 +52,24 @@ drawGuess :: String -> String -> Widget ()
 drawGuess word guess = hBox $ map drawLetter $ wordleComp guess word
 
 drawEntry :: AppState -> Widget ()
-drawEntry AppState{entry = entry} = W.hLimit wordLength $ padRight Max $ str entry
+drawEntry AppState{entry = entry} = str (entry ++ spaces)
+  where spaces = replicate (wordLength - length entry) ' '
 
 drawDebug AppState{word = word, debug = debug}
   | debug     = str word
-  | otherwise = str ""
+  | otherwise = W.emptyWidget
 
 drawKeyboard AppState{guesses = guesses, word = word} =
-  vBox $ map C.hCenter keyboardRes
-  where keyboard = ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
+  vBox keyboardRes
+  where keyboard = ["qwertyuiop", "asdfghjkl", " zxcvbnm"]
         guessRes = concatMap (`wordleComp` word) guesses
         letterStatus c = fromMaybe Unknown $ maximumMay (guessRes `withKey` c)
         keyboardRes = map (hBox . map drawLetter . fmapTup letterStatus) keyboard
 
 drawLetter :: (Char, Result) -> Widget ()
 drawLetter (c, res) = withAttr (resultToAttr res) $ str [c]
+
+drawMessage :: AppState -> Widget ()
+drawMessage AppState{message = ""}      = C.hCenter $ str " "
+drawMessage AppState{message = message} = C.hCenter $ str message
 

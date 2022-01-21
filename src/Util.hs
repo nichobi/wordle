@@ -19,6 +19,7 @@ data AppState = AppState
   , entry      :: String
   , day        :: Int
   , dictionary :: [String]
+  , message    :: String
   , debug      :: Bool
   }
 
