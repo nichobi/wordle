@@ -1,7 +1,7 @@
 cabal-version:         >=1.10
 
 name:                  wordle
-version:               0.1.1.0
+version:               0.1.2.0
 synopsis:              A Wordle clone for the terminal
 description:
   A clone of <https://www.powerlanguage.co.uk/ powerlanguage>'s daily word game <https://www.powerlanguage.co.uk/wordle/ Wordle>, for the terminal.

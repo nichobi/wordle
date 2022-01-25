@@ -77,7 +77,10 @@ handleEvent as e = case e of
 
 makeGuess :: AppState -> AppState
 makeGuess as@AppState{entry=entry, word=word, guesses=guesses, dictionary = dict}
-  | word == entry                 = as{entry = [], guesses = entry:guesses, status = Won}
+  | word == entry = as{ entry = [], guesses = entry:guesses
+                      , status = Won
+                      , message = scoreMessage $ length (entry:guesses)
+                      }
   | length entry < wordLength     = as{message = "Not enough letters"}
   | entry `notElem` dict          = as{message = "Not in word list"}
   | length guesses + 1 < numGuess = as{entry = [], guesses = entry:guesses}

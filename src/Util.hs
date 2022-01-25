@@ -5,6 +5,15 @@ module Util where
 wordLength = 5 :: Int
 numGuess   = 6 :: Int
 
+scoreMessage :: Int -> String
+scoreMessage x = case x of
+  1 -> "Genius"
+  2 -> "Magnificent"
+  3 -> "Impressive"
+  4 -> "Splendid"
+  5 -> "Great"
+  6 -> "Phew"
+
 -- Datatypes
 
 data Result = Unknown | Excluded | Misplaced | Correct
