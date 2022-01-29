@@ -7,12 +7,12 @@ numGuess   = 6 :: Int
 
 scoreMessage :: Int -> String
 scoreMessage x = case x of
-  1 -> "Genius"
-  2 -> "Magnificent"
-  3 -> "Impressive"
-  4 -> "Splendid"
-  5 -> "Great"
-  6 -> "Phew"
+  1 -> "Suspicious"
+  2 -> "Well done"
+  3 -> "Could be better"
+  4 -> "Not great"
+  5 -> "Poor effort"
+  6 -> "Disgraceful"
 
 -- Datatypes
 
