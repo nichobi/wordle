@@ -2,7 +2,6 @@ module WordleComp (wordleComp) where
 
 import Util
 
-import Data.Char (isAlpha)
 import Data.List (delete)
 
 -- Takes a guess and a target word, returns a list of guessed letters paired
@@ -16,6 +15,7 @@ findCorrect [] [] = []
 findCorrect (x:xs) (y:ys)
   | x == y        = (x, y, Correct)  : findCorrect xs ys
   | otherwise     = (x, y, Excluded) : findCorrect xs ys
+findCorrect _ _ = error "findCorrect called on words of different lengths"
 
 -- Second sweep, remarking any misplaced letters
 findMisplaced :: [(Char, Char, Result)] -> [(Char, Char, Result)]

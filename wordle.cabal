@@ -1,7 +1,7 @@
 cabal-version:         >=1.10
 
 name:                  wordle
-version:               0.1.2.0
+version:               0.1.2.1
 synopsis:              A Wordle clone for the terminal
 description:
   A clone of <https://www.powerlanguage.co.uk/ powerlanguage>'s daily word game <https://www.powerlanguage.co.uk/wordle/ Wordle>, for the terminal.
@@ -13,6 +13,8 @@ category:              Game
 build-type:            Simple
 data-files:            data/*.txt
 
+source-repository:location: https://github.com/nichobi/wordle
+
 executable wordle
   hs-source-dirs:      src
   main-is:             Main.hs
@@ -21,8 +23,8 @@ executable wordle
                      , Paths_wordle
                      , Util
                      , WordleComp
-  ghc-options:         -threaded
   build-depends:       base >=4.15 && <4.16
+  ghc-options:         -threaded -Werror -Wall -Wno-name-shadowing
                      , brick
                      , vty
                      , time

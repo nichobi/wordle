@@ -2,8 +2,9 @@ module Util where
 
 -- Constants
 
-wordLength = 5 :: Int
-numGuess   = 6 :: Int
+wordLength, numGuess :: Int
+wordLength = 5
+numGuess   = 6
 
 scoreMessage :: Int -> String
 scoreMessage x = case x of
@@ -13,6 +14,7 @@ scoreMessage x = case x of
   4 -> "Splendid"
   5 -> "Great"
   6 -> "Phew"
+  _ -> error "Invalid score"
 
 -- Datatypes
 
@@ -35,7 +37,7 @@ data AppState = AppState
 -- Functions
 
 chunksOf :: Int -> [a] -> [[a]]
-chunksOf n [] = []
+chunksOf _ [] = []
 chunksOf n xs = h : chunksOf n t
   where (h, t) = splitAt n xs
 

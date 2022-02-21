@@ -6,11 +6,9 @@ import WordleComp (wordleComp)
 import Data.Maybe (fromMaybe)
 
 import Brick
-  ( App(..), AttrMap, BrickEvent(..), EventM, Next, Widget
-  , defaultMain, showFirstCursor, continueWithoutRedraw
-  , continue, halt
+  ( AttrMap, Widget
   , str, vBox, hBox
-  , padRight, padLeft, padTop, padAll, Padding (Max, Pad)
+  , padLeft, padTop, Padding (Max, Pad)
   , attrMap, withAttr, AttrName, attrName, bg
   )
 import qualified Brick.Widgets.Border       as B
@@ -40,6 +38,7 @@ drawUI as = pure $ vBox
   , drawDebug as
   ]
 
+drawTitle :: AppState -> Widget n
 drawTitle AppState{day = day} = C.hCenter $ str $ "Wordle " ++ show day
 
 drawWordle :: AppState -> Widget ()
@@ -55,10 +54,12 @@ drawEntry :: AppState -> Widget ()
 drawEntry AppState{entry = entry} = str (entry ++ spaces)
   where spaces = replicate (wordLength - length entry) ' '
 
+drawDebug :: AppState -> Widget n
 drawDebug AppState{word = word, debug = debug}
   | debug     = str word
   | otherwise = W.emptyWidget
 
+drawKeyboard :: AppState -> Widget ()
 drawKeyboard AppState{guesses = guesses, word = word} =
   vBox keyboardRes
   where keyboard = ["qwertyuiop", "asdfghjkl", " zxcvbnm"]

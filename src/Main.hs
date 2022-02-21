@@ -17,6 +17,7 @@ import Brick
   )
 import Control.Monad (when)
 
+initState :: String -> [String] -> Int -> AppState
 initState word dictionary day = AppState
   { word       = word
   , status     = InProgress
@@ -28,6 +29,7 @@ initState word dictionary day = AppState
   , debug      = False
   }
 
+main :: IO ()
 main = do
   dayNumber  <- getDayNumber
   word       <- readWordle dayNumber
@@ -55,6 +57,7 @@ getDictionary = do
   wordles       <- init <$> readFile wordlesFile
   pure $ chunksOf wordLength (wordles ++ rawDictionary)
 
+app :: App AppState e ()
 app = App { appDraw         = drawUI
           , appHandleEvent  = handleEvent
           , appStartEvent   = return
@@ -64,16 +67,16 @@ app = App { appDraw         = drawUI
 
 handleEvent :: AppState -> BrickEvent () e -> EventM () (Next AppState)
 handleEvent as@AppState{status = InProgress} e = case e of
-  (VtyEvent (EvKey (KChar c) []))        -> (continue . insertChar c) as'
-  (VtyEvent (EvKey KBS       []))        -> (continue . removeChar)   as'
-  (VtyEvent (EvKey KEnter    []))        -> (continue . makeGuess)    as'
---(VtyEvent (EvKey KEsc      []))        -> (continue . toggleDebug)  as'
-  (VtyEvent (EvKey (KChar c) [V.MCtrl])) -> halt                      as
-  _                                      -> continueWithoutRedraw     as
+  (VtyEvent (EvKey (KChar c)   []))        -> (continue . insertChar c) as'
+  (VtyEvent (EvKey KBS         []))        -> (continue . removeChar)   as'
+  (VtyEvent (EvKey KEnter      []))        -> (continue . makeGuess)    as'
+--(VtyEvent (EvKey KEsc        []))        -> (continue . toggleDebug)  as'
+  (VtyEvent (EvKey (KChar 'c') [V.MCtrl])) -> halt                      as
+  _                                        -> continueWithoutRedraw     as
   where as' = as{message = ""}
 handleEvent as e = case e of
-  (VtyEvent (EvKey (KChar c) [V.MCtrl])) -> halt                      as
-  _                                      -> continueWithoutRedraw     as
+  (VtyEvent (EvKey (KChar 'c') [V.MCtrl])) -> halt                      as
+  _                                        -> continueWithoutRedraw     as
 
 makeGuess :: AppState -> AppState
 makeGuess as@AppState{entry=entry, word=word, guesses=guesses, dictionary = dict}
