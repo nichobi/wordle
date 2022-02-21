@@ -40,7 +40,7 @@ main = do
 getDayNumber :: IO Int
 getDayNumber = do
   today <- localDay . zonedTimeToLocalTime <$> getZonedTime
-  pure $ fromInteger $ diffDays today dayZero
+  return $ fromInteger $ diffDays today dayZero
     where dayZero = fromGregorian 2021 06 19
 
 
@@ -55,7 +55,7 @@ getDictionary = do
   wordlesFile   <- getDataFileName "data/wordlesraw.txt"
   rawDictionary <- init <$> readFile dictFile
   wordles       <- init <$> readFile wordlesFile
-  pure $ chunksOf wordLength (wordles ++ rawDictionary)
+  return $ chunksOf wordLength (wordles ++ rawDictionary)
 
 app :: App AppState e ()
 app = App { appDraw         = drawUI

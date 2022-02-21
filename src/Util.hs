@@ -47,8 +47,8 @@ withKey ((a,b):xs) y
   | otherwise = withKey xs y
 withKey [] _ = []
 
-fmapTup :: (a -> b) -> [a] -> [(a,b)]
-fmapTup f x = zip x (map f x)
+fmapTup :: Functor f => (a -> b) -> f a -> f (a,b)
+fmapTup f = fmap (\x -> (x, f x))
 
 maximumMay :: Ord a => [a] -> Maybe a
 maximumMay [] = Nothing

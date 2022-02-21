@@ -11,11 +11,11 @@ wordleComp guess word = map (\(x,_,r) -> (x, r)) $ findMisplaced $ findCorrect g
 
 -- Initial sweep of letters, marking only correct or excluded
 findCorrect :: String -> String -> [(Char, Char, Result)]
-findCorrect [] [] = []
-findCorrect (x:xs) (y:ys)
-  | x == y        = (x, y, Correct)  : findCorrect xs ys
-  | otherwise     = (x, y, Excluded) : findCorrect xs ys
-findCorrect _ _ = error "findCorrect called on words of different lengths"
+findCorrect = zipWith f
+  where f :: Char -> Char -> (Char, Char, Result)
+        f x y
+          | x == y    = (x, y, Correct)
+          | otherwise = (x, y, Excluded)
 
 -- Second sweep, remarking any misplaced letters
 findMisplaced :: [(Char, Char, Result)] -> [(Char, Char, Result)]
@@ -24,8 +24,8 @@ findMisplaced xs = helper xs (unmatchedYs xs)
         helper ((x, y, Excluded):xs) unmatched
           | x `elem` unmatched  = (x, y, Misplaced) : helper xs (x `delete` unmatched)
           | otherwise           = (x, y, Excluded)  : helper xs unmatched
-        helper (x:xs) unmatched = x:helper xs unmatched
-        unmatchedYs ((_, y, Excluded):xs) = y:unmatchedYs xs
+        helper (x:xs) unmatched = x : helper xs unmatched
+        unmatchedYs ((_, y, Excluded):xs) = y : unmatchedYs xs
         unmatchedYs (_:xs)                = unmatchedYs xs
         unmatchedYs [] = []
 
