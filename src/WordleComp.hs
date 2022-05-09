@@ -27,5 +27,5 @@ findMisplaced xs = helper xs (unmatchedYs xs)
         helper (x:xs) unmatched = x : helper xs unmatched
         unmatchedYs ((_, y, Excluded):xs) = y : unmatchedYs xs
         unmatchedYs (_:xs)                = unmatchedYs xs
-        unmatchedYs [] = []
+        unmatchedYs []                    = []
 
